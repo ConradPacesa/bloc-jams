@@ -86,15 +86,20 @@ window.onload = function() {
     
     setCurrentAlbum(albumPicasso);
     
-var findParentByClassName = function(element, targetClass) {
-    if (element) {
-        var currentParent = element.parentElement;
-        while(currentParent.className !== targetClass && currentParent.className !== null) {
-            currentParent = currentParent.parentElement;
+    var findParentByClassName = function(element, targetClass) {
+        if (element.parentElement.className == null) {
+            console.log("No prarent found");
+        } else if (element) {
+            var currentParent = element.parentElement;
+            while(currentParent.className !== targetClass && currentParent.className !== null) {
+                currentParent = currentParent.parentElement;
+            }
+            return currentParent;
+        } 
+        if (currentParent.className == null) {
+            console.log("No parent found with that class name");
         }
-        return currentParent;
-    }
-};
+    };
     
     var getSongItem = function(element) {
         switch (element.className) {
@@ -133,7 +138,6 @@ var findParentByClassName = function(element, targetClass) {
     };
 
     songListContainer.addEventListener('mouseover', function(event) {
-        //debugger;
         if (event.target.parentElement.className == 'album-view-song-item' && event.target.parentElement.querySelector('.song-item-number').getAttribute('data-song-number') !== currentlyPlayingSong) {
             event.target.parentElement.querySelector('.song-item-number').innerHTML = playButtonTemplate;
         }
