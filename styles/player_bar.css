@@ -169,6 +169,10 @@
         min-height: 3.5rem;
     }
     
+    .player-bar .currently-playing {
+        min-height: 2.5rem;
+    }
+    
     .player-bar .artist-name, 
     .player-bar .song-name {
         display: none;
