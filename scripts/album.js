@@ -3,7 +3,7 @@ var createSongRow = function(songNumber, songName, songLength) {
         '<tr class="album-view-song-item">'
       + '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>'
       + '  <td class="song-item-title">' + songName + '</td>'
-      + '  <td class="song-item-duration">' + songLength + '</td>'
+      + '  <td class="song-item-duration">' + filterTimeCode(songLength) + '</td>'
       ;
     
     var $row = $(template);
@@ -61,7 +61,6 @@ var createSongRow = function(songNumber, songName, songLength) {
         if (songNumber !== currentlyPlayingSongNumber) {
             songNumberCell.html(songNumber);
         }
-        //console.log("Song number type is " + typeof songNumber + "\n and currenlyPlayingSongNumber is " + typeof currentlyPlayingSongNumber);
     };
     
     $row.find('.song-item-number').click(clickHandler);
@@ -97,8 +96,11 @@ var updateSeekBarWhileSongPlays = function() {
         currentSoundFile.bind('timeupdate', function(event) {
             var seekBarFillRatio = this.getTime() / this.getDuration();
             var $seekBar = $('.seek-control .seek-bar');
-            
+            var filteredTime = filterTimeCode(this.getTime());
+            var filteredDuration = filterTimeCode(this.getDuration());
             updateSeekPercentage($seekBar, seekBarFillRatio);
+            setCurrentTimeInPlayer(filteredTime);
+            setTotalTimeInPlayer(filteredDuration);
         });
     }
 };
@@ -156,8 +158,23 @@ var setupSeekBars = function() {
     });
 };
 
+var setCurrentTimeInPlayer = function(currentTime) {
+    $('.current-time').html(currentTime);
+};
+
+var setTotalTimeInPlayer = function(totalTime) {
+    $('.total-time').html(totalTime);
+};
+
 var trackIndex = function(album, song) {
     return album.songs.indexOf(song);
+};
+
+var filterTimeCode = function(timeInSeconds) {
+    var timeInt = parseFloat(timeInSeconds);
+    var timeFloor = Math.floor(timeInt);
+    var time = Math.floor(timeFloor / 60) + ':' + (timeFloor % 60 < 10 ? '0' + timeFloor % 60 : timeFloor % 60);
+    return time;
 };
 
 var nextSong = function() {
@@ -284,7 +301,3 @@ $(document).ready(function() {
     $nextButton.click(nextSong);
     $playPauseButton.click(togglePlayFromPlayerBar);
 });
-
-
-
-
